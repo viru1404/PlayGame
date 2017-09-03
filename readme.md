@@ -31,7 +31,7 @@ $ virtualenv projectname
 
 Now, you need this Game project files in your workspace,So you can clone it easily
 ```sh
-git clone git@github.com:viru1404/PlayGame.git
+git clone https://github.com/viru1404/PlayGame
 ```
 
 ##### 3.Requirements
