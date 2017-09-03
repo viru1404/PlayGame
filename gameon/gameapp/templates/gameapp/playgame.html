@@ -1,0 +1,156 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <style >
+    .radio_item{
+      display: none !important;
+    }
+
+    .label_item {
+      opacity: 1.0;
+    }
+
+    .radio_item:checked + label {
+      opacity: 0.1;
+    }
+  </style>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+  <script type = "text/javascript" 
+  src = "https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <script type = "text/javascript" language = "javascript">
+   $(document).ready(function() {
+    $("#btn").click(function(event){
+     var fruits = [];
+     var answer = [];
+     {% for ques in data %}
+     fruits.push(parseInt({{ques.id}}));
+     {% endfor %}
+
+
+
+     {% for ques in data %}
+     var selectedVal = "0";
+     var selected = $("input[type='radio'][name='answer{{forloop.counter}}']:checked");
+     if (selected.length > 0) {
+      selectedVal = selected.val();
+    }
+    answer.push(selectedVal);
+    {% endfor %}
+    
+ques1=fruits[0];
+ques2=fruits[1];
+ques3=fruits[2];
+ques4=fruits[3];
+ques5=fruits[4];
+
+ans1=answer[0];
+ans2=answer[1];
+ans3=answer[2];
+ans4=answer[3];
+ans5=answer[4];
+
+    
+    
+    $.ajax({
+      type: "POST",
+      url: "http://127.0.0.1:8000/save/",
+      data: {
+        'comptitor':{{compe}},
+        'ques1':ques1,
+        'ques2':ques2,
+        'ques3':ques3,
+        'ques4':ques4,
+        'ques5':ques5,
+        'ans1':ans1,
+        'ans2':ans2,
+        'ans3':ans3,
+        'ans4':ans4,
+        'ans5':ans5,
+        'csrfmiddlewaretoken':"{{ csrf_token }}",
+      },
+      success: function(resultData){
+        alert(resultData);
+        window.location.href="{% url 'home' %}";
+      },
+      error:function(resultData){
+        alert("try again, connection to server is poor currently");
+      },
+    });
+  });
+  });
+
+</script>
+</head>
+<body>
+  <div class="container-fluid" style="background-color: skyblue"">
+    <div class="container">
+      <ul class="nav justify-content-center">
+        <li class="nav-item">
+          <a class="nav-link active" href="#" style="color: black; font-size: 2em">Play Game</a>
+        </li>
+
+      </ul>
+      <ul class="nav justify-content-end" >
+
+        <li class="nav-item" >
+          {% if user.is_authenticated %}
+          {{ user.username }} <a href="{% url 'logout' %}">logout</a>
+          {% else %}
+          <a href="{% url 'login' %}">login</a> / <a href="{% url 'signup' %}">signup</a>
+          {% endif %}
+        </li>
+
+      </ul>
+    </div>
+  </div>
+  <div class="container" style="text-align:right;padding-top: 1em;" >
+    <p>Score: {{ totalscore }}</p>
+  </div>
+  <div class="container" style="padding-top: 10px;">
+    
+    {% for ques in data %}
+    <br>
+    <br>
+    <div class="container">
+    Question {{forloop.counter}}
+    </div>
+
+    <div style="text-align: center;"><img src="{{ ques.ques.url }}" alt="" ></div>
+    <br><br>
+     <div class="container" style="text-align: center">
+    Select any one matching image.<br><br><br>
+    </div>
+    <div style="text-align: center;" >
+      <input type="radio" class="radio_item" value="1" name="answer{{ forloop.counter }}" id="answer{{ forloop.counter }}1">
+      <label class="label_item" for="answer{{ forloop.counter }}1"> <img src="{{ ques.ans1.url }}" alt="" height='200' width = '200' > </label>
+      <input type="radio" class="radio_item" value="2" name="answer{{ forloop.counter }}" id="answer{{ forloop.counter }}2">
+      <label class="label_item" for="answer{{ forloop.counter }}2"> <img src="{{ ques.ans2.url }}" alt="" height='200' width = '200' > </label>
+      <input type="radio" class="radio_item" value="3" name="answer{{ forloop.counter }}" id="answer{{ forloop.counter }}3">
+      <label class="label_item" for="answer{{ forloop.counter }}3"> <img src="{{ ques.ans3.url }}" alt="" height='200' width = '200' > </label>
+      <input type="radio" class="radio_item" value="4" name="answer{{ forloop.counter }}" id="answer{{ forloop.counter }}4">
+      <label class="label_item" for="answer{{ forloop.counter }}4"> <img src="{{ ques.ans4.url }}" alt="" height='200' width = '200' > </label>
+      <input type="radio" class="radio_item" value="5" name="answer{{ forloop.counter }}" id="answer{{ forloop.counter }}5">
+      <label class="label_item" for="answer{{ forloop.counter }}5"> <img src="{{ ques.ans5.url }}" alt="" height='200' width = '200' > </label>
+
+    </div>
+    <hr>
+    {% endfor %}
+    <br>
+    <br>
+    <center> 
+     <button id="btn" type="submit" class="btn bt-default">Complete Test</button>
+     </center>
+     <br>
+     <br>
+  </div>
+
+
+</body>
+</html>
+
