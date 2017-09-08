@@ -2,21 +2,26 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate
 from django.shortcuts import render, redirect
-from .models import Questions, Activeusers,Profile,checkfun
+from .models import Questions, Activeusers,Profile,checkfun,timer
 from .forms import SignUpForm
 import json
 from datetime import datetime
 from django.contrib.auth.models import User
 from django.db.models import Q
 import random
-print(random.randint(0,9))
+#print(random.randint(0,9))
+
+
+consensus =4
 
 # Create your views here.
 from django.http import HttpResponse
 @login_required
 def save(request):
   if request.method == 'POST':
+  	time1 =str(datetime.now)
   	competitor=int(request.POST.get('comptitor'));
+  	ran=int(request.POST.get('ran'));
   	ques1=int(request.POST.get('ques1'));
   	ques1 = Questions.objects.get(id=ques1)
   	ques2=int(request.POST.get('ques2'));
@@ -40,22 +45,22 @@ def save(request):
   		print("None")
   		t =Activeusers(user= request.user,qid1=ques1,qid2=ques2,qid3=ques3,qid4=ques4,qid5=ques5,answer1=ans1,answer2=ans2,answer3=ans3,answer4=ans4,answer5=ans5)
   		t.save()
-  		return HttpResponse("You will get score when your opponent will finish")
-  	elif checkwith.isfinished==2:
+  		return HttpResponse("submitted at "+str(time1)+ "You will get score when your opponent will finish")
+  	elif checkwith.isfinished==consensus:
   		print("compe get settled")
   		t=Activeusers(user= request.user,qid1=ques1,qid2=ques2,qid3=ques3,qid4=ques4,qid5=ques5,answer1=ans1,answer2=ans2,answer3=ans3,answer4=ans4,answer5=ans5)
   		t.save()
-  		return HttpResponse("You will get score when your opponent will finish")
+  		return HttpResponse("submitted at "+str(time1)+ "You will get score when your opponent will finish")
   	else:
   		print("still frre compte")
   		checkwith.isfinished+=1
   		checkwith.save()
   		score=0
-  		t=Activeusers(user= request.user,qid1=ques1,qid2=ques2,qid3=ques3,qid4=ques4,qid5=ques5,answer1=ans1,answer2=ans2,answer3=ans3,answer4=ans4,answer5=ans5,score=score,isfinished=2)
+  		t=Activeusers(user= request.user,qid1=ques1,qid2=ques2,qid3=ques3,qid4=ques4,qid5=ques5,answer1=ans1,answer2=ans2,answer3=ans3,answer4=ans4,answer5=ans5,score=score,isfinished=consensus)
   		t.save()
   		ee=checkfun(id1=checkwith.id,id2=t.id)
   		ee.save()
-  		if checkwith.isfinished==2:
+  		if checkwith.isfinished==consensus:
   			qw=checkfun.objects.filter(id1=checkwith.id)
   			score=0
   			z1=1
@@ -80,11 +85,19 @@ def save(request):
   			for ii in qw:
   				qa=Activeusers.objects.get(id=ii.id2)
   				qa.score=score
+  				tr=qa.user
+  				tr.profile.score+=score
+  				tr.save()
   				qa.save()
-  			return HttpResponse("you get "+str(score) + " points from this task")
+  			checkwith.score=score
+  			checkwith.save()
+  			obj=checkwith.user
+  			obj.profile.score+=score
+  			obj.save()
+  			return HttpResponse("submitted at "+str(time1)+"you get "+str(score) + " points from this task")
   		else:
-  			return HttpResponse("you will get  points from this task is completed by other users")
-  return HttpResponse("Try Again , We dont get your data.")
+  			return HttpResponse("submitted at "+str(time1)+ "you will get  points from this task is completed by other users")
+  return HttpResponse( "submitted at "+str(time1)+"Try Again , We dont get your data.")
 
 
 
@@ -94,12 +107,15 @@ def save(request):
 @login_required
 def gamepage(request):
 	try:
-		comp=Activeusers.objects.filter(~Q(isfinished=2) )[:1]
+		comp=Activeusers.objects.filter(~Q(isfinished=consensus) )[:1]
 	except Activeusers.IndexError:
 		comp=None
 	compe=-1
+	ran =random.randint(0,9)
 	if comp:
-		#wsx=timer(id1=comp[0],id2=)
+		timeofuser=timer(id1=comp[0].id,id2=ran)
+		timeofuser.save()
+		timeof=timeofuser.timetill
 		print(comp[0].isfinished)
 		data = []
 		data.append(comp[0].qid1)
@@ -110,9 +126,10 @@ def gamepage(request):
 		compe=comp[0].id
 	else:
 		data = Questions.objects.order_by('?')[:5]
+		timeof=datetime.now
 	obj=request.user
 	totalscore=obj.profile.score 
-	context = {'data': data, 'compe':compe, 'totalscore':totalscore}
+	context = {'data': data, 'compe':compe, 'totalscore':totalscore, 'time':timeof ,'ran':ran}
 	return render(request, 'gameapp/playgame.html' , context)
 
 

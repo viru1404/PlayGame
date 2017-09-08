@@ -72,6 +72,7 @@ ans5=answer[4];
         'ans3':ans3,
         'ans4':ans4,
         'ans5':ans5,
+        'ran':{{ran}},
         'csrfmiddlewaretoken':"{{ csrf_token }}",
       },
       success: function(resultData){
@@ -111,6 +112,9 @@ ans5=answer[4];
   </div>
   <div class="container" style="text-align:right;padding-top: 1em;" >
     <p>Score: {{ totalscore }}</p>
+  </div>
+   <div class="container" style="text-align:right;padding-top: 1em;" >
+    <p>time when started: {{ time }}</p>
   </div>
   <div class="container" style="padding-top: 10px;">
     

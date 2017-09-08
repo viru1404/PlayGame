@@ -46,8 +46,9 @@ class checkfun(models.Model):
     id2 = models.IntegerField(default=0)
 
 class timer(models.Model):
-	id1 = models.IntegerField(default=0)
-	id2=models.IntegerField(default=0)
+	id1 = models.IntegerField(default=0)    #taskid with whome got paired
+	ran=models.IntegerField(default=0)       
+	id2=models.IntegerField(default=0)      # users task id
 	timetill = models.DateTimeField(default=datetime.now, blank=True)
 
  
