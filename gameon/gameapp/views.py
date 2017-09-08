@@ -84,12 +84,14 @@ def save(request):
   			score=z1+z2+z3+z4+z5
   			for ii in qw:
   				qa=Activeusers.objects.get(id=ii.id2)
+  				qa.isfinished=consensus
   				qa.score=score
   				tr=qa.user
   				tr.profile.score+=score
   				tr.save()
   				qa.save()
   			checkwith.score=score
+  			checkwith.isfinished=consensus
   			checkwith.save()
   			obj=checkwith.user
   			obj.profile.score+=score
