@@ -41,4 +41,13 @@ class Activeusers(models.Model):
 	timetill = models.DateTimeField(default=datetime.now, blank=True)
 	isfinished = models.IntegerField(default=0)
 	score =models.IntegerField(default=0)
+class checkfun(models.Model):
+    id1 = models.IntegerField(default=0)
+    id2 = models.IntegerField(default=0)
+
+class timer(models.Model):
+	id1 = models.IntegerField(default=0)
+	id2=models.IntegerField(default=0)
+	timetill = models.DateTimeField(default=datetime.now, blank=True)
+
  

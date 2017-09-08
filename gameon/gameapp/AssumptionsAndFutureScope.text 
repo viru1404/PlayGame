@@ -1,0 +1,17 @@
+Assumptions:
+1. There is always more than one user playing.
+2. A player gets all the questions of some previous player who has not been paired till now.
+3. If no player before him that have not been paired till yet than that player will recieve random five questions.
+4. Score is given equal to the total matching answers from both the players.
+5. If the user left the game without submitting the game will be finished
+6. If the server is down after the question is loaded user will not be able to submit and he will get the resubmit option again and again
+7. Initially score of player is zero.
+8. There are fixed 5 questions in a task.
+9. There are fixed 1 primary and 5 secondary images in each question.
+
+Future Scope:
+1. It can support any number of questions and answers instead of fixed questions and answers.
+2. User can get live pairing.
+3. Time limit on question submission.
+4. User gets paired with a user with same range of score.
+5. Audio clip and video clip can be used.

@@ -1,0 +1,252 @@
+#incluce<bits/stdc++.h>
+using namespace std;
+
+int main()
+{
+    string a;
+    cin>>a;
+    vector<string> vec(a.size()+5);
+    vector<string>::iterator it;
+    it=vec.begin();
+    int lastreached=0,caps=0,curorg=-1;
+    pair<int,int>cur;
+    cur.first=0;
+    cur.second=0;
+    for(int i=0;i<a.size();i++)
+    {
+        if(a[i]!='@' && a[i]!='#' && a[i]!='<' && a[i]!='>' && a[i]!='/' && a[i]!='?' && a[i]!='^')
+        {
+            if(caps)
+            {
+                toupper(a[i]);
+            }
+            else
+            {
+                tolower(a[i]);
+            }
+            if(vec[cur.first].size()>cur.second)
+            {
+                vec[cur.first]=vec[cur.first].substr(0,cur.second)+to_string(a[i])+vec[cur.first].substr(cur.second,vec[cur.first].size()-cur.second);
+            }
+            else
+            {
+                vec[cur.first]+=to_string(a[i]);
+                cur.second++;
+            }
+            lastreached=max(lastreached,cur.first);
+        }
+        else if(a[i]=='@')
+        {
+            if(caps)
+                caps=0;
+            else
+                caps=1;
+        }
+        else if(a[i]=='#')
+        {
+            //it=vec.begin();
+            it=vec.begin()+cur.first+1;
+            string ss="";
+            if(vec[cur.first].size()>cur.second)
+            {
+                 ss=vec[cur.first].substr(cur.second,b[cur.first].size()-cur.second);
+            
+                vec[cur.first]=vec[cur.first].substr(0,cur.second);
+               
+            }
+            vec.insert(it,ss);
+            cur.first++;
+            cur.second=0;
+            lastreached=max(lastreached,cur.first);
+        }
+        else if(a[i]=='<')
+        {
+            if(cur.second==0)
+            {
+                if(cur.first!=0)
+                {
+                    cur.first--;
+                    cur.second=vec[cur.first].size();
+                }
+            }
+            else
+            {
+                cur.second--;
+            }
+            lastreached=max(lastreached,cur.first);
+        }
+        else if(a[i]=='>')
+        {
+            if(cur.second==vec[cur.first].size())
+            {
+                if(cur.first!=lastreached)
+                {
+                    cur.first++;
+                    cur.second=0;
+                }
+            }
+            else
+            {
+                cur.second++;
+            }
+            lastreached=max(lastreached,cur.first);
+        }
+        else if(a[i]=='/')
+        {
+            if(cur.second==0)
+            {
+                if(cur.first!=0)
+                {
+                    cur.first--;;
+                    cur.second=vec[cur.first].size();
+                }
+            }
+            else
+            {
+                vec[cur.first]=vec[cur.first].substr(0,cur.second-1)+vec[cur.first].substr(cur.second,vec[cur.first].size()-cur.second);
+                vec.second--;
+           
+            }
+            lastreached=max(lastreached,cur.first);
+        }
+        else if(a[i]=='?')
+        {
+            int k;
+            for( k=i;k<n;k++)
+            {
+                if(a[k]=='?')
+                {
+                    continue;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            if(a[k]=='?')
+            {
+                int yy=k-i+1;
+                int tt=vec[cur.first].size();
+                if(cur.first-yy>0)
+                {
+                    cur.first=0;
+                }
+                else
+                {
+                    cur.first-=yy;
+                }
+                if(vec[cur.first].size()<tt)
+                {
+                    cur.second=vec[cur.first].size();
+                }
+                
+            }
+            lastreached=max(lastreached,cur.first);
+        }
+        else if(a[i]=='?')
+        {
+            int k;
+            for( k=i;k<n;k++)
+            {
+                if(a[k]=='?')
+                {
+                    continue;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            if(a[k]=='?')
+            {
+                int yy=k-i+1;
+                int tt=vec[cur.first].size();
+                if(cur.first+yy>lastreached)
+                {
+                    cur.first=lastreached;
+                }
+                else
+                {
+                    cur.first+=yy;
+                }
+                if(vec[cur.first].size()<tt)
+                {
+                    cur.second=vec[cur.first].size();
+                }
+                i=k;
+            }
+            else
+            {
+                int yy=k-i;
+                int tt=vec[cur.first].size();
+                if(cur.first+yy>lastreached)
+                {
+                    cur.first=lastreached;
+                }
+                else
+                {
+                    cur.first+=yy;
+                }
+                if(vec[cur.first].size()<tt)
+                {
+                    cur.second=vec[cur.first].size();
+                }
+                i=k-1;   
+            }
+            lastreached=max(lastreached,cur.first);
+        }
+        else if(a[i]=='^')
+        {
+            int k;
+            for( k=i;k<n;k++)
+            {
+                if(a[k]=='^')
+                {
+                    continue;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            if(a[k]=='^')
+            {
+                int yy=k-i+1;
+                int tt=vec[cur.first].size();
+                if(cur.first-yy>0)
+                {
+                    cur.first=0;
+                }
+                else
+                {
+                    cur.first-=yy;
+                }
+                if(vec[cur.first].size()<tt)
+                {
+                    cur.second=vec[cur.first].size();
+                }
+                i=k;
+            }
+            else
+            {
+                int yy=k-i;
+                int tt=vec[cur.first].size();
+                if(cur.first-yy>0)
+                {
+                    cur.first=0;
+                }
+                else
+                {
+                    cur.first-=yy;
+                }
+                if(vec[cur.first].size()<tt)
+                {
+                    cur.second=vec[cur.first].size();
+                }
+                i=k-1;   
+            }
+            lastreached=max(lastreached,cur.first);
+        }
+    }
+    return 0;
+}
